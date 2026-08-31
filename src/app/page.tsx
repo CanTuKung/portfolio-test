@@ -109,11 +109,17 @@ export default function Page() {
             <h2 className="text-xl font-bold">Research Interests</h2>
           </BlurFade>
           <div className="flex flex-wrap gap-2">
-            {DATA.skills.map((skill, id) => (
+            {DATA.skills.map((skill, id) => {
+  const SkillIcon =
+    "icon" in skill
+      ? (skill.icon as React.ComponentType<{ className?: string }>)
+      : null;
+
+  return (
               <BlurFade key={skill.name} delay={BLUR_FADE_DELAY * 8 + id * 0.05}>
                 <div className="border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2">
-                  {"icon" in skill && skill.icon && (
-  <skill.icon className="size-4 rounded overflow-hidden object-contain" />
+                  {SkillIcon && (
+  <SkillIcon className="size-4 rounded overflow-hidden object-contain" />
 )}
                   <span className="text-foreground text-sm font-medium">{skill.name}</span>
                 </div>
