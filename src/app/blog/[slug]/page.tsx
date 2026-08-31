@@ -98,7 +98,7 @@ export default async function Blog({
 
   const jsonLdContent = JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": "NewsArticle",
     headline: post.title,
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
@@ -114,7 +114,7 @@ export default async function Blog({
   }).replace(/</g, "\\u003c");
 
   return (
-    <section id="blog">
+    <section id="news-post">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -123,9 +123,9 @@ export default async function Blog({
         }}
       />
       <div className="flex justify-start gap-4 items-center">
-        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-6 group" aria-label="Back to Blog">
+        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-6 group" aria-label="Back to News">
           <ChevronLeft className="size-3 group-hover:-translate-x-px transition-transform" />
-          Back to Blog
+          Back to News
         </Link>
       </div>
       <div className="flex flex-col gap-4">

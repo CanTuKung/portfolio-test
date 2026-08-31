@@ -6,7 +6,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function ProjectsSection() {
     return (
-        <section id="projects">
+        <section id="publications">
             <div className="flex min-h-0 flex-col gap-y-8">
                 <div className="flex flex-col gap-y-4 items-center justify-center">
                     <div className="flex items-center w-full">
@@ -15,7 +15,7 @@ export default function ProjectsSection() {
 
                         />
                         <div className="border bg-primary z-10 rounded-xl px-4 py-1">
-                            <span className="text-background text-sm font-medium">My Projects</span>
+                            <span className="text-background text-sm font-medium">Publications</span>
                         </div>
                         <div
                             className="flex-1 h-px bg-linear-to-l from-transparent from-5% via-border via-95% to-transparent"
@@ -23,11 +23,9 @@ export default function ProjectsSection() {
                         />
                     </div>
                     <div className="flex flex-col gap-y-3 items-center justify-center">
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Check out my latest work</h2>
+                        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Selected Publications</h2>
                         <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed text-balance text-center">
-                            I&apos;ve worked on a variety of projects, from simple
-                            websites to complex web applications. Here are a few of my
-                            favorites.
+                            A short list of representative publications. Full details will be added later.
                         </p>
                     </div>
                 </div>
@@ -56,4 +54,3 @@ export default function ProjectsSection() {
         </section>
     );
 }
-

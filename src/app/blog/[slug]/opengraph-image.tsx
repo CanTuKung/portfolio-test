@@ -6,7 +6,7 @@ import { DATA } from "@/data/resume";
 
 export const runtime = "edge";
 
-export const alt = "Blog Post";
+export const alt = "News Post";
 export const size = {
     width: 1200,
     height: 630,
@@ -142,7 +142,7 @@ export default async function Image({
                             <div style={styles.wrapper}>
                                 {imageUrl && (
                                     <div style={styles.imageSection}>
-                                        <img src={imageUrl} alt="Blog Post" style={styles.image} />
+                                        <img src={imageUrl} alt="News Post" style={styles.image} />
                                     </div>
                                 )}
                                 <div style={styles.mainContainer}>

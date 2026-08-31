@@ -4,7 +4,7 @@ import { DATA } from "@/data/resume";
 
 export const runtime = "edge";
 
-export const alt = "Blog";
+export const alt = "News";
 export const size = {
     width: 1200,
     height: 630,
@@ -108,8 +108,8 @@ const styles = {
 export default async function Image() {
     try {
         const fontData = await getFontData();
-        const title = "Blog";
-        const description = "Thoughts on software development, life, and more.";
+        const title = "News";
+        const description = "Short updates on research progress, publications, and activities.";
         const imageUrl = DATA.avatarUrl
             ? new URL(DATA.avatarUrl, DATA.url).toString()
             : undefined;
@@ -121,7 +121,7 @@ export default async function Image() {
                         <div style={styles.wrapper}>
                             {imageUrl && (
                                 <div style={styles.imageSection}>
-                                    <img src={imageUrl} alt="Blog" style={styles.image} />
+                                    <img src={imageUrl} alt="News" style={styles.image} />
                                 </div>
                             )}
                             <div style={styles.mainContainer}>
