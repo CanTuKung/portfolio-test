@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 export const DATA = {
-  name: "KAIST Mobility Researcher",
+  name: "Hyeon Been",
   initials: "KR",
   url: "https://example.com",
   location: "Daejeon, South Korea",
