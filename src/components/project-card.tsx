@@ -77,7 +77,7 @@ export function ProjectCard({
     >
       {media && (
         <div className="relative shrink-0">
-          {hasMainLink ? (
+          {href ? (
             <Link
               href={href}
               target="_blank"
