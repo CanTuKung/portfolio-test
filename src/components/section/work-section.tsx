@@ -8,51 +8,64 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { DATA } from "@/data/resume";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { NewsItem } from "@/data/news";
 
 function LogoImage({ src, alt }: { src: string; alt: string }) {
   const [imageError, setImageError] = useState(false);
 
   if (!src || imageError) {
-    return (
-      <div className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border bg-muted flex-none" />
-    );
+    return null;
   }
 
   return (
     <img
       src={src}
       alt={alt}
-      className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-contain flex-none"
+      className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-cover flex-none"
       onError={() => setImageError(true)}
     />
   );
 }
 
 interface WorkSectionProps {
+  items: readonly NewsItem[];
   limit?: number;
 }
 
-export default function WorkSection({ limit }: WorkSectionProps) {
-  const items = typeof limit === "number" ? DATA.news.slice(0, limit) : DATA.news;
+const formatNewsDate = (date: string) => {
+  const parsed = new Date(date);
+
+  if (Number.isNaN(parsed.getTime())) {
+    return date;
+  }
+
+  return parsed.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+export default function WorkSection({ items, limit }: WorkSectionProps) {
+  const visibleItems = typeof limit === "number" ? items.slice(0, limit) : items;
 
   return (
     <Accordion type="single" collapsible className="w-full grid gap-6">
-      {items.map((newsItem) => (
+      {visibleItems.map((newsItem) => (
         <AccordionItem
-          key={newsItem.company}
-          value={newsItem.company}
+          key={`${newsItem.title}-${newsItem.date}`}
+          value={`${newsItem.title}-${newsItem.date}`}
           className="w-full border-b-0 grid gap-2"
         >
           <AccordionTrigger className="hover:no-underline p-0 cursor-pointer transition-colors rounded-none group [&>svg]:hidden">
             <div className="flex items-center gap-x-3 justify-between w-full text-left">
               <div className="flex items-center gap-x-3 flex-1 min-w-0">
-                <LogoImage src={newsItem.logoUrl} alt={newsItem.company} />
+                {newsItem.image && <LogoImage src={newsItem.image} alt={newsItem.title} />}
                 <div className="flex-1 min-w-0 gap-0.5 flex flex-col">
                   <div className="font-semibold leading-none flex items-center gap-2">
-                    {newsItem.company}
+                    {newsItem.title}
                     <span className="relative inline-flex items-center w-3.5 h-3.5">
                       <ChevronRight
                         className={cn(
@@ -71,21 +84,35 @@ export default function WorkSection({ limit }: WorkSectionProps) {
                       />
                     </span>
                   </div>
-                  <div className="font-sans text-sm text-muted-foreground">
-                    {newsItem.title}
-                  </div>
+                  {newsItem.category && (
+                    <div className="font-sans text-sm text-muted-foreground">
+                      {newsItem.category}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none">
-                <span>
-                  {newsItem.start} - {newsItem.end ?? "Present"}
-                </span>
+                <span>{formatNewsDate(newsItem.date)}</span>
               </div>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="p-0 ml-13 text-xs sm:text-sm text-muted-foreground">
-            {newsItem.description}
-          </AccordionContent>
+          {(newsItem.description || newsItem.link) && (
+            <AccordionContent className="p-0 ml-13 text-xs sm:text-sm text-muted-foreground">
+              <div className="flex flex-col gap-2">
+                {newsItem.description && <p>{newsItem.description}</p>}
+                {newsItem.link && (
+                  <a
+                    href={newsItem.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-fit text-foreground hover:underline underline-offset-4"
+                  >
+                    Read more
+                  </a>
+                )}
+              </div>
+            </AccordionContent>
+          )}
         </AccordionItem>
       ))}
     </Accordion>

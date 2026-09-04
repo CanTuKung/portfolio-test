@@ -7,14 +7,42 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DATA } from "@/data/resume";
+import { Icons } from "@/components/icons";
+import { navigationLinks, profile, type SocialIcon } from "@/data/profile";
+import {
+  BookOpen,
+  Download,
+  FolderKanban,
+  HomeIcon,
+  Mail,
+  Newspaper,
+} from "lucide-react";
+
+const navIconMap = {
+  home: HomeIcon,
+  publications: BookOpen,
+  projects: FolderKanban,
+  news: Newspaper,
+  contact: Mail,
+  cv: Download,
+};
+
+const socialIconMap: Record<SocialIcon, React.ComponentType<{ className?: string }>> = {
+  github: Icons.github,
+  linkedin: Icons.linkedin,
+  x: Icons.x,
+  email: Icons.email,
+  globe: Icons.globe,
+};
 
 export default function Navbar() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30">
       <Dock className="z-50 pointer-events-auto relative h-14 p-2 w-fit mx-auto flex gap-2 border bg-card/90 backdrop-blur-3xl shadow-[0_0_10px_3px] shadow-primary/5">
-        {DATA.navbar.map((item) => {
+        {navigationLinks.map((item) => {
           const isExternal = item.href.startsWith("http");
+          const IconComponent = navIconMap[item.icon];
+
           return (
             <Tooltip key={item.href}>
               <TooltipTrigger asChild>
@@ -22,10 +50,10 @@ export default function Navbar() {
                   href={item.href}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  download={"download" in item && item.download ? true : undefined}
+                  download={item.download ? true : undefined}
                 >
                   <DockIcon className="rounded-3xl cursor-pointer size-full bg-background p-0 text-muted-foreground hover:text-foreground hover:bg-muted backdrop-blur-3xl border border-border transition-colors">
-                    <item.icon className="size-full rounded-sm overflow-hidden object-contain" />
+                    <IconComponent className="size-full rounded-sm overflow-hidden object-contain" />
                   </DockIcon>
                 </a>
               </TooltipTrigger>
@@ -44,13 +72,14 @@ export default function Navbar() {
           orientation="vertical"
           className="h-2/3 m-auto w-px bg-border"
         />
-        {Object.entries(DATA.contact.social)
-          .filter(([_, social]) => social.navbar)
-          .map(([name, social], index) => {
+        {profile.socialLinks
+          .filter((social) => social.showInNavbar)
+          .map((social) => {
             const isExternal = social.url.startsWith("http");
-            const IconComponent = social.icon;
+            const IconComponent = socialIconMap[social.icon];
+
             return (
-              <Tooltip key={`social-${name}-${index}`}>
+              <Tooltip key={`social-${social.name}`}>
                 <TooltipTrigger asChild>
                   <a
                     href={social.url}
@@ -67,7 +96,7 @@ export default function Navbar() {
                   sideOffset={8}
                   className="rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]"
                 >
-                  <p>{name}</p>
+                  <p>{social.name}</p>
                   <TooltipArrow className="fill-primary" />
                 </TooltipContent>
               </Tooltip>

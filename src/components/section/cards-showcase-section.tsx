@@ -2,20 +2,17 @@ import BlurFade from "@/components/magicui/blur-fade";
 import { ProjectCard } from "@/components/project-card";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
 
-type ShowcaseItem = {
+export type ShowcaseItem = {
   title: string;
-  href?: string;
-  dates: string;
-  description: string;
-  technologies: readonly string[];
+  year?: number;
+  description?: string;
   image?: string;
-  video?: string;
+  tags?: readonly string[];
+  href?: string;
   links?: readonly {
-    icon: ReactNode;
-    type: string;
-    href: string;
+    label: string;
+    url: string;
   }[];
 };
 
@@ -67,7 +64,7 @@ export default function CardsShowcaseSection({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto auto-rows-fr w-full">
         {visibleItems.map((item, id) => (
           <BlurFade
-            key={`${item.title}-${item.dates}`}
+            key={`${item.title}-${item.year ?? "na"}`}
             delay={BLUR_FADE_DELAY * (12 + delayOffset) + id * 0.05}
             className="h-full"
           >
@@ -75,10 +72,9 @@ export default function CardsShowcaseSection({
               href={item.href}
               title={item.title}
               description={item.description}
-              dates={item.dates}
-              tags={item.technologies}
+              dates={item.year ? String(item.year) : undefined}
+              tags={item.tags}
               image={item.image}
-              video={item.video}
               links={item.links}
             />
           </BlurFade>
