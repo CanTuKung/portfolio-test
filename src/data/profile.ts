@@ -1,4 +1,4 @@
-export type SocialIcon = "github" | "linkedin" | "x" | "email" | "globe";
+export type SocialIcon = "linkedin" | "x" | "email" | "globe";
 
 export interface SocialLink {
   name: string;
@@ -13,7 +13,7 @@ export interface ProfileContent {
   siteUrl: string;
   shortTitle: string;
   shortIntroduction: string;
-  about: string;
+  researchInterests: string[];
   profileImage: string;
   contactEmail: string;
   contactPhone?: string;
@@ -21,24 +21,23 @@ export interface ProfileContent {
 }
 
 export const profile: ProfileContent = {
-  name: "Hyeon Been",
-  initials: "HB",
+  name: "Hyeon Been Seo",
+  initials: "HBS",
   siteUrl: "https://example.com",
   shortTitle: "Mobility Engineering Researcher",
   shortIntroduction:
-    "Mobility engineering researcher at KAIST studying intelligent transportation systems and urban mobility.",
-  about:
-    "I am a researcher focused on mobility engineering at KAIST. My current work explores data-driven transportation systems, autonomous mobility, and human-centered mobility design. This website is a short academic profile with selected publications and updates.",
+    "M.S. student at the CCS Graduate School of Mobility.\nFocused on system-level optimization of mobility engineering problems.",
+  researchInterests: [
+    "Bayesian Optimization",
+    "Surrogate Modeling",
+    "AI-driven Design Optimization",
+    "Data-Driven Mobility",
+    "Path Planning & Routing Optimization",
+  ],
   profileImage: "/profile/profile.jpg",
-  contactEmail: "researcher@kaist.ac.kr",
+  contactEmail: "shbj0524@kaist.ac.kr",
   contactPhone: "+82-00-0000-0000",
   socialLinks: [
-    {
-      name: "GitHub",
-      url: "https://github.com/your-username",
-      icon: "github",
-      showInNavbar: true,
-    },
     {
       name: "LinkedIn",
       url: "https://www.linkedin.com/in/your-profile",
@@ -51,7 +50,7 @@ export const profile: ProfileContent = {
     },
     {
       name: "Email",
-      url: "mailto:researcher@kaist.ac.kr",
+      url: "mailto:shbj0524@kaist.ac.kr",
       icon: "email",
     },
   ],

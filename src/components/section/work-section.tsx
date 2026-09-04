@@ -1,41 +1,18 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import BlurFade from "@/components/magicui/blur-fade";
+import MediaGallery from "@/components/media-gallery";
 import type { NewsItem } from "@/data/news";
-
-function LogoImage({ src, alt }: { src: string; alt: string }) {
-  const [imageError, setImageError] = useState(false);
-
-  if (!src || imageError) {
-    return null;
-  }
-
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-cover flex-none"
-      onError={() => setImageError(true)}
-    />
-  );
-}
+import { cn } from "@/lib/utils";
+import { ArrowUpRight } from "lucide-react";
 
 interface WorkSectionProps {
   items: readonly NewsItem[];
-  limit?: number;
+  layout?: "homepage" | "archive";
 }
 
 const formatNewsDate = (date: string) => {
-  const parsed = new Date(date);
+  const parsed = new Date(`${date}T00:00:00`);
 
   if (Number.isNaN(parsed.getTime())) {
     return date;
@@ -48,73 +25,84 @@ const formatNewsDate = (date: string) => {
   });
 };
 
-export default function WorkSection({ items, limit }: WorkSectionProps) {
-  const visibleItems = typeof limit === "number" ? items.slice(0, limit) : items;
-
+export default function WorkSection({ items, layout = "archive" }: WorkSectionProps) {
   return (
-    <Accordion type="single" collapsible className="w-full grid gap-6">
-      {visibleItems.map((newsItem) => (
-        <AccordionItem
-          key={`${newsItem.title}-${newsItem.date}`}
-          value={`${newsItem.title}-${newsItem.date}`}
-          className="w-full border-b-0 grid gap-2"
-        >
-          <AccordionTrigger className="hover:no-underline p-0 cursor-pointer transition-colors rounded-none group [&>svg]:hidden">
-            <div className="flex items-center gap-x-3 justify-between w-full text-left">
-              <div className="flex items-center gap-x-3 flex-1 min-w-0">
-                {newsItem.image && <LogoImage src={newsItem.image} alt={newsItem.title} />}
-                <div className="flex-1 min-w-0 gap-0.5 flex flex-col">
-                  <div className="font-semibold leading-none flex items-center gap-2">
-                    {newsItem.title}
-                    <span className="relative inline-flex items-center w-3.5 h-3.5">
-                      <ChevronRight
-                        className={cn(
-                          "absolute h-3.5 w-3.5 shrink-0 text-muted-foreground stroke-2 transition-all duration-300 ease-out",
-                          "translate-x-0 opacity-0",
-                          "group-hover:translate-x-1 group-hover:opacity-100",
-                          "group-data-[state=open]:opacity-0 group-data-[state=open]:translate-x-0"
-                        )}
-                      />
-                      <ChevronDown
-                        className={cn(
-                          "absolute h-3.5 w-3.5 shrink-0 text-muted-foreground stroke-2 transition-all duration-200",
-                          "opacity-0 rotate-0",
-                          "group-data-[state=open]:opacity-100 group-data-[state=open]:rotate-180"
-                        )}
-                      />
-                    </span>
-                  </div>
-                  {newsItem.category && (
-                    <div className="font-sans text-sm text-muted-foreground">
-                      {newsItem.category}
-                    </div>
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-x-5 gap-y-10",
+        layout === "homepage"
+          ? "sm:grid-cols-3"
+          : "sm:grid-cols-2 sm:gap-x-6 sm:gap-y-12"
+      )}
+    >
+      {items.map((item, index) => {
+        const images = [
+          ...(item.images ?? []),
+          ...(item.image ? [item.image] : []),
+        ];
+
+        return (
+          <BlurFade
+            key={`${item.title}-${item.date}`}
+            delay={index * 0.05}
+            className="h-full"
+            inView
+          >
+            <article className="group flex h-full flex-col">
+              <MediaGallery
+                images={images}
+                alt={item.title}
+                className={layout === "homepage" ? "aspect-[4/5]" : "aspect-4/3"}
+              />
+
+              <div className="flex flex-1 flex-col border-b border-border/70 pb-5 pt-4 transition-colors duration-300 group-hover:border-foreground/25">
+                <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                  <time dateTime={item.date}>{formatNewsDate(item.date)}</time>
+                  {item.category && (
+                    <>
+                      <span className="size-0.5 rounded-full bg-muted-foreground/50" aria-hidden />
+                      <span>{item.category}</span>
+                    </>
                   )}
                 </div>
-              </div>
-              <div className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none">
-                <span>{formatNewsDate(newsItem.date)}</span>
-              </div>
-            </div>
-          </AccordionTrigger>
-          {(newsItem.description || newsItem.link) && (
-            <AccordionContent className="p-0 ml-13 text-xs sm:text-sm text-muted-foreground">
-              <div className="flex flex-col gap-2">
-                {newsItem.description && <p>{newsItem.description}</p>}
-                {newsItem.link && (
-                  <a
-                    href={newsItem.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-fit text-foreground hover:underline underline-offset-4"
+
+                <div className="flex items-start justify-between gap-2">
+                  <h3
+                    className={cn(
+                      "font-semibold leading-snug tracking-tight text-foreground/90 transition-colors group-hover:text-foreground",
+                      layout === "homepage" ? "text-base" : "text-lg"
+                    )}
                   >
-                    Read more
-                  </a>
+                    {item.title}
+                  </h3>
+                  {item.link && (
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-0.5 shrink-0 text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-label={`Open ${item.title}`}
+                    >
+                      <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </a>
+                  )}
+                </div>
+
+                {item.description && (
+                  <p
+                    className={cn(
+                      "mt-2 text-sm leading-relaxed text-muted-foreground",
+                      layout === "homepage" ? "line-clamp-2" : "line-clamp-3"
+                    )}
+                  >
+                    {item.description}
+                  </p>
                 )}
               </div>
-            </AccordionContent>
-          )}
-        </AccordionItem>
-      ))}
-    </Accordion>
+            </article>
+          </BlurFade>
+        );
+      })}
+    </div>
   );
 }

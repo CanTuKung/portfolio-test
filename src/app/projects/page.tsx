@@ -8,6 +8,7 @@ const projectItems: ShowcaseItem[] = sortedProjects.map((project) => ({
   title: project.title,
   year: project.year,
   description: project.description,
+  images: project.images,
   image: project.image,
   tags: project.tools,
   href: project.links?.[0]?.url,

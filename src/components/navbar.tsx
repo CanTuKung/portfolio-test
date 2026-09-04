@@ -28,7 +28,6 @@ const navIconMap = {
 };
 
 const socialIconMap: Record<SocialIcon, React.ComponentType<{ className?: string }>> = {
-  github: Icons.github,
   linkedin: Icons.linkedin,
   x: Icons.x,
   email: Icons.email,

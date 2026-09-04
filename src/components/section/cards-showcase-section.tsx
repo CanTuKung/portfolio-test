@@ -7,6 +7,7 @@ export type ShowcaseItem = {
   title: string;
   year?: number;
   description?: string;
+  images?: readonly string[];
   image?: string;
   tags?: readonly string[];
   href?: string;
@@ -17,9 +18,9 @@ export type ShowcaseItem = {
 };
 
 interface CardsShowcaseSectionProps {
-  badgeLabel: string;
+  badgeLabel?: string;
   title: string;
-  description: string;
+  description?: string;
   items: readonly ShowcaseItem[];
   maxItems?: number;
   viewAllHref?: string;
@@ -45,23 +46,30 @@ export default function CardsShowcaseSection({
   return (
     <div className="flex min-h-0 flex-col gap-y-8">
       <div className="flex flex-col gap-y-4 items-center justify-center">
-        <div className="flex items-center w-full">
-          <div className="flex-1 h-px bg-linear-to-r from-transparent from-5% via-border via-95% to-transparent" />
-          <div className="border bg-primary z-10 rounded-xl px-4 py-1">
-            <span className="text-background text-sm font-medium">{badgeLabel}</span>
+        {badgeLabel && (
+          <div className="flex items-center w-full">
+            <div className="flex-1 h-px bg-linear-to-r from-transparent from-5% via-border via-95% to-transparent" />
+            <div className="border bg-primary z-10 rounded-xl px-4 py-1">
+              <span className="text-background text-sm font-medium">{badgeLabel}</span>
+            </div>
+            <div className="flex-1 h-px bg-linear-to-l from-transparent from-5% via-border via-95% to-transparent" />
           </div>
-          <div className="flex-1 h-px bg-linear-to-l from-transparent from-5% via-border via-95% to-transparent" />
-        </div>
+        )}
+        {!badgeLabel && (
+          <div className="h-px w-full bg-linear-to-r from-transparent via-portfolio-accent/35 to-transparent" />
+        )}
 
         <div className="flex flex-col gap-y-3 items-center justify-center text-center">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">{title}</h2>
-          <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed text-balance">
-            {description}
-          </p>
+          {description && (
+            <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed text-balance">
+              {description}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto auto-rows-fr w-full">
+      <div className="mx-auto grid w-full max-w-5xl auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2">
         {visibleItems.map((item, id) => (
           <BlurFade
             key={`${item.title}-${item.year ?? "na"}`}
@@ -74,6 +82,7 @@ export default function CardsShowcaseSection({
               description={item.description}
               dates={item.year ? String(item.year) : undefined}
               tags={item.tags}
+              images={item.images}
               image={item.image}
               links={item.links}
             />
@@ -85,7 +94,7 @@ export default function CardsShowcaseSection({
         <div className="flex justify-end">
           <Link
             href={viewAllHref}
-            className="group inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="group inline-flex items-center gap-1 text-sm text-portfolio-accent/80 transition-colors hover:text-portfolio-accent"
           >
             <span>{viewAllLabel}</span>
             <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />

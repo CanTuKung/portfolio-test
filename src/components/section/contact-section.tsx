@@ -3,8 +3,6 @@ import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { profile } from "@/data/profile";
 
 export default function ContactSection() {
-  const github = profile.socialLinks.find((link) => link.name === "GitHub");
-
   return (
     <div className="border rounded-xl p-10 relative">
       <div className="absolute -top-4 border bg-primary z-10 rounded-xl px-4 py-1 left-1/2 -translate-x-1/2">
@@ -29,24 +27,10 @@ export default function ContactSection() {
           Reach out by email at{" "}
           <Link
             href={`mailto:${profile.contactEmail}`}
-            className="text-blue-500 hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+            className="rounded-sm text-portfolio-accent hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {profile.contactEmail}
-          </Link>
-          {github && (
-            <>
-              {" "}or via{" "}
-              <Link
-                href={github.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-              >
-                {github.name}
-              </Link>
-              .
-            </>
-          )}
+          </Link>.
         </p>
       </div>
     </div>

@@ -8,7 +8,7 @@ export default function ProjectsSection() {
   return (
     <section id="projects">
       <div className="flex min-h-0 flex-col gap-y-8">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto auto-rows-fr w-full">
+        <div className="mx-auto grid w-full max-w-5xl auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2">
           {sortedProjects.map((project, id) => (
             <BlurFade
               key={`${project.title}-${project.year}`}
@@ -21,6 +21,7 @@ export default function ProjectsSection() {
                 description={project.description}
                 dates={String(project.year)}
                 tags={project.tools}
+                images={project.images}
                 image={project.image}
                 links={project.links}
               />

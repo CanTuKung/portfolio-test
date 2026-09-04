@@ -6,6 +6,7 @@ import CardsShowcaseSection, {
   type ShowcaseItem,
 } from "@/components/section/cards-showcase-section";
 import ContactSection from "@/components/section/contact-section";
+import PublicationsSection from "@/components/section/publications-section";
 import WorkSection from "@/components/section/work-section";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -17,37 +18,14 @@ import {
 } from "@/data/content";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import Markdown from "react-markdown";
 
 const BLUR_FADE_DELAY = 0.04;
-
-const publicationItems: ShowcaseItem[] = featuredPublications.map((publication) => {
-  const links = [
-    publication.doi ? { label: "DOI", url: publication.doi } : null,
-    publication.pdf ? { label: "PDF", url: publication.pdf } : null,
-    publication.link ? { label: "Link", url: publication.link } : null,
-  ].filter((value): value is NonNullable<typeof value> => Boolean(value));
-
-  const descriptionParts = [
-    `${publication.authors} · ${publication.venue}`,
-    publication.description,
-  ].filter(Boolean);
-
-  return {
-    title: publication.title,
-    year: publication.year,
-    description: descriptionParts.join("\n\n"),
-    image: publication.image,
-    tags: publication.tags,
-    href: publication.doi ?? publication.pdf ?? publication.link,
-    links,
-  };
-});
 
 const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
   title: project.title,
   year: project.year,
   description: project.description,
+  images: project.images,
   image: project.image,
   tags: project.tools,
   href: project.links?.[0]?.url,
@@ -58,7 +36,7 @@ export default function Page() {
   return (
     <main className="min-h-dvh flex flex-col gap-14 relative">
       <section id="hero">
-        <div className="mx-auto w-full max-w-2xl space-y-8">
+        <div className="mx-auto w-full max-w-4xl space-y-8">
           <div className="gap-2 gap-y-6 flex flex-col md:flex-row justify-between">
             <div className="gap-2 flex flex-col order-2 md:order-1">
               <BlurFadeText
@@ -69,7 +47,7 @@ export default function Page() {
               />
 
               <BlurFadeText
-                className="text-muted-foreground max-w-[600px] md:text-lg lg:text-xl"
+                className="max-w-[600px] whitespace-pre-line text-base text-muted-foreground md:max-w-[720px] md:text-lg"
                 delay={BLUR_FADE_DELAY}
                 text={profile.shortIntroduction}
               />
@@ -85,27 +63,44 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="about">
-        <div className="flex min-h-0 flex-col gap-y-4">
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <h2 className="text-xl font-bold">About Me</h2>
+      <section id="research-interests">
+        <div className="mx-auto flex min-h-0 w-full max-w-4xl flex-col gap-y-5">
+          <BlurFade delay={BLUR_FADE_DELAY * 5}>
+            <h2 className="flex items-center gap-3 text-2xl font-bold">
+              <span className="h-5 w-1 rounded-full bg-portfolio-accent" aria-hidden />
+              Research Interests
+            </h2>
           </BlurFade>
 
-          <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-              <Markdown>{profile.about}</Markdown>
-            </div>
-          </BlurFade>
+          <div className="flex flex-wrap gap-2.5">
+            {profile.researchInterests.map((interest, index) => (
+              <BlurFade
+                key={interest}
+                delay={BLUR_FADE_DELAY * 6 + index * 0.04}
+              >
+                <span className="inline-flex items-center gap-2 rounded-full border border-portfolio-accent/20 bg-portfolio-accent-soft/60 px-3 py-1.5 text-sm text-foreground/75 transition-colors duration-200 hover:border-portfolio-accent/40 hover:bg-portfolio-accent-soft hover:text-foreground">
+                  <span className="size-1.5 rounded-full bg-portfolio-accent/70" aria-hidden />
+                  {interest}
+                </span>
+              </BlurFade>
+            ))}
+          </div>
         </div>
       </section>
 
       <section id="education">
-        <div className="flex min-h-0 flex-col gap-y-6">
+        <div className="mx-auto flex min-h-0 w-full max-w-4xl flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-xl font-bold">Education</h2>
+            <h2 className="flex items-center gap-3 text-2xl font-bold">
+              <span className="h-5 w-1 rounded-full bg-portfolio-accent" aria-hidden />
+              Education
+            </h2>
           </BlurFade>
 
-          <div className="flex flex-col gap-8">
+          <div className="relative flex flex-col gap-8">
+            {education.length > 1 && (
+              <div className="absolute bottom-10 left-5 top-10 w-px bg-linear-to-b from-portfolio-accent/10 via-portfolio-accent/35 to-portfolio-accent/10 md:left-6" aria-hidden />
+            )}
             {education.map((item, index) => {
               const content = (
                 <>
@@ -114,14 +109,14 @@ export default function Page() {
                       <img
                         src={item.logo}
                         alt={item.institution}
-                        className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-contain flex-none"
+                        className="relative z-10 size-10 flex-none overflow-hidden rounded-full border bg-background p-1 object-contain shadow ring-2 ring-border transition-colors group-hover:ring-portfolio-accent/30 md:size-12"
                       />
                     ) : (
-                      <div className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border bg-muted flex-none" />
+                      <div className="relative z-10 size-10 flex-none rounded-full border bg-background p-1 shadow ring-2 ring-border transition-colors group-hover:ring-portfolio-accent/30 md:size-12" />
                     )}
 
                     <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-                      <div className="font-semibold leading-none flex items-center gap-2">
+                      <div className="flex items-center gap-2 font-semibold leading-none transition-colors group-hover:text-portfolio-accent">
                         {item.institution}
                         {item.url && (
                           <ArrowUpRight
@@ -132,7 +127,8 @@ export default function Page() {
                       </div>
 
                       <div className="font-sans text-sm text-muted-foreground">
-                        {[item.degree, item.department].filter(Boolean).join(" · ")}
+                        <div>{item.degree}</div>
+                        {item.department && <div>{item.department}</div>}
                       </div>
                     </div>
                   </div>
@@ -169,14 +165,13 @@ export default function Page() {
 
       <section id="publications">
         <BlurFade delay={BLUR_FADE_DELAY * 9}>
-          <CardsShowcaseSection
-            badgeLabel="Publications"
-            title="Selected Publications"
-            description="Featured publication entries from the full publications dataset."
-            items={publicationItems}
+          <PublicationsSection
+            title="Publications"
+            items={featuredPublications}
             maxItems={2}
             viewAllHref="/publications"
             viewAllLabel="View All Publications"
+            layout="homepage"
             delayOffset={0}
           />
         </BlurFade>
@@ -185,9 +180,7 @@ export default function Page() {
       <section id="projects">
         <BlurFade delay={BLUR_FADE_DELAY * 11}>
           <CardsShowcaseSection
-            badgeLabel="Projects"
-            title="Selected Projects"
-            description="Featured project entries from the full projects dataset."
+            title="Projects"
             items={projectItems}
             maxItems={2}
             viewAllHref="/projects"
@@ -201,10 +194,13 @@ export default function Page() {
         <div className="flex min-h-0 flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 13}>
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-xl font-bold">News</h2>
+              <h2 className="flex items-center gap-3 text-2xl font-bold">
+                <span className="h-5 w-1 rounded-full bg-portfolio-accent" aria-hidden />
+                News
+              </h2>
               <Link
                 href="/news"
-                className="group inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="group inline-flex items-center gap-1 text-sm text-portfolio-accent/80 transition-colors hover:text-portfolio-accent"
               >
                 <span>View All News</span>
                 <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -213,7 +209,7 @@ export default function Page() {
           </BlurFade>
 
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <WorkSection items={recentNews} />
+            <WorkSection items={recentNews} layout="homepage" />
           </BlurFade>
         </div>
       </section>

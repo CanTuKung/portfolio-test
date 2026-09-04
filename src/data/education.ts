@@ -11,17 +11,18 @@ export interface EducationItem {
 export const education: EducationItem[] = [
   {
     institution: "Korea Advanced Institute of Science and Technology (KAIST)",
-    degree: "Ph.D. in Mobility Engineering",
-    department: "Graduate School of Mobility",
-    period: "2023 - Present",
-    logo: "/profile/profile.jpg",
-    url: "https://www.kaist.ac.kr/en/",
+    degree: "M.S. in CCS Graduate School of Mobility",
+    department: "Advisor: Prof. Namwoo Kang",
+    period: "Sep.2026 - Present",
+    logo: "/education/images.png",
+    url: "https://mo.kaist.ac.kr/",
   },
   {
-    institution: "[Previous University]",
-    degree: "B.S. in Mechanical Engineering",
-    period: "2017 - 2021",
-    logo: "/profile/profile.jpg",
-    url: "https://example.com",
+    institution: "Korea University (Sejong Campus)",
+    degree: "B.S. in Department of Mobility Science and Engineering",
+    department: "Advisor: Prof. Ungki Lee",
+    period: "Mar.2021 - Aug.2026",
+    logo: "/education/emblem_1.png",
+    url: "https://sejong.korea.ac.kr/sites/dmse/index.do",
   },
 ];
