@@ -1,10 +1,11 @@
 import { Icons } from "@/components/icons";
 import {
   BookOpen,
-  FlaskConical,
+  Download,
+  FolderKanban,
   HomeIcon,
+  Mail,
   Newspaper,
-  UserIcon,
 } from "lucide-react";
 
 export const DATA = {
@@ -27,11 +28,21 @@ export const DATA = {
   ],
   navbar: [
     { href: "/#hero", icon: HomeIcon, label: "Home" },
-    { href: "/#about", icon: UserIcon, label: "About" },
-    { href: "/#research", icon: FlaskConical, label: "Research" },
     { href: "/#publications", icon: BookOpen, label: "Publications" },
+    { href: "/#projects", icon: FolderKanban, label: "Projects" },
     { href: "/#news", icon: Newspaper, label: "News" },
+    { href: "/#contact", icon: Mail, label: "Contact" },
+    {
+      href: "/cv-placeholder.pdf",
+      icon: Download,
+      label: "CV Download",
+      download: true,
+    },
   ],
+  cv: {
+    filePath: "/cv-placeholder.pdf",
+    summary: "Placeholder CV preview. Replace with your full curriculum vitae.",
+  },
   contact: {
     email: "researcher@kaist.ac.kr",
     tel: "+82-00-0000-0000",
@@ -62,7 +73,7 @@ export const DATA = {
       },
     },
   },
-  work: [
+  news: [
     {
       company: "Lab Website Launch",
       href: "/news",
@@ -99,6 +110,18 @@ export const DATA = {
       description:
         "Presented recent research directions in smart mobility systems.",
     },
+    {
+      company: "Dataset Release",
+      href: "/news",
+      badges: [],
+      location: "KAIST",
+      title: "News Update",
+      logoUrl: "/me.png",
+      start: "May 2026",
+      end: "May 2026",
+      description:
+        "Released a placeholder dataset page for ongoing mobility experiments.",
+    },
   ],
   education: [
     {
@@ -118,7 +141,7 @@ export const DATA = {
       end: "2021",
     },
   ],
-  projects: [
+  publications: [
     {
       title: "Paper Title Placeholder 1",
       href: "https://doi.org/",
@@ -174,30 +197,51 @@ export const DATA = {
       video: "",
     },
   ],
-  hackathons: [
+  projects: [
     {
-      title: "Micromobility and Cities",
-      dates: "Interest Area",
-      location: "Research Theme",
-      description: "How shared mobility systems influence sustainable urban travel.",
-      image: "/me.png",
-      links: [],
+      title: "Project Placeholder 1",
+      href: "https://example.com",
+      dates: "2026",
+      active: true,
+      description: "Short description placeholder for a selected project.",
+      technologies: ["Tool A", "Method A"],
+      links: [
+        {
+          type: "Details",
+          href: "https://example.com",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
     },
     {
-      title: "Autonomous Transit Systems",
-      dates: "Interest Area",
-      location: "Research Theme",
-      description: "Scalable and safe deployment strategies for autonomous public transit.",
-      image: "/me.png",
-      links: [],
+      title: "Project Placeholder 2",
+      href: "https://example.com",
+      dates: "2025",
+      active: true,
+      description: "Short description placeholder for another selected project.",
+      technologies: ["Tool B", "Method B"],
+      links: [
+        {
+          type: "Repo",
+          href: "https://github.com/your-username",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
     },
     {
-      title: "Mobility and Human Factors",
-      dates: "Interest Area",
-      location: "Research Theme",
-      description: "Designing equitable and user-centered transportation systems.",
-      image: "/me.png",
+      title: "Project Placeholder 3",
+      href: "https://example.com",
+      dates: "2024",
+      active: true,
+      description: "Short description placeholder for a full projects page entry.",
+      technologies: ["Tool C", "Method C"],
       links: [],
+      image: "",
+      video: "",
     },
   ],
 } as const;
