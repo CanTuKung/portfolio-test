@@ -58,19 +58,18 @@ export const profile: ProfileContent = {
 };
 
 export const navigationLinks = [
-  { href: "/#hero", label: "Home", icon: "home" as const },
+  { href: "/", label: "Home", icon: "home" as const },
   {
-    href: "/#publications",
+    href: "/publications",
     label: "Publications",
     icon: "publications" as const,
   },
-  { href: "/#projects", label: "Projects", icon: "projects" as const },
-  { href: "/#news", label: "News", icon: "news" as const },
+  { href: "/projects", label: "Projects", icon: "projects" as const },
+  { href: "/news", label: "News", icon: "news" as const },
   { href: "/#contact", label: "Contact", icon: "contact" as const },
   {
-    href: "/cv/cv.pdf",
-    label: "CV Download",
+    href: "/cv",
+    label: "CV",
     icon: "cv" as const,
-    download: true,
   },
 ] as const;
