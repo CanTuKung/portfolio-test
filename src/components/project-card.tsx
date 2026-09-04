@@ -12,7 +12,7 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
   const [imageError, setImageError] = useState(false);
 
   if (!src || imageError) {
-    return <div className="w-full h-48 bg-muted" />;
+    return null;
   }
 
   return (
@@ -25,20 +25,20 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+interface CardLink {
+  label: string;
+  url: string;
+}
+
 interface Props {
   title: string;
   href?: string;
-  description: string;
-  dates: string;
-  tags: readonly string[];
-  link?: string;
+  description?: string;
+  dates?: string;
+  tags?: readonly string[];
   image?: string;
   video?: string;
-  links?: readonly {
-    icon: React.ReactNode;
-    type: string;
-    href: string;
-  }[];
+  links?: readonly CardLink[];
   className?: string;
 }
 
@@ -48,82 +48,92 @@ export function ProjectCard({
   description,
   dates,
   tags,
-  link,
   image,
   video,
   links,
   className,
 }: Props) {
+  const hasMainLink = Boolean(href);
+  const media = video ? (
+    <video
+      src={video}
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="w-full h-48 object-cover"
+    />
+  ) : image ? (
+    <ProjectImage src={image} alt={title} />
+  ) : null;
+
   return (
     <div
       className={cn(
-        "flex flex-col h-full border border-border rounded-xl overflow-hidden hover:ring-2 cursor-pointer hover:ring-muted transition-all duration-200",
+        "flex flex-col h-full border border-border rounded-xl overflow-hidden hover:ring-2 hover:ring-muted transition-all duration-200",
+        hasMainLink ? "cursor-pointer" : "cursor-default",
         className
       )}
     >
-      <div className="relative shrink-0">
-        <Link
-          href={href || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block"
-        >
-          {video ? (
-            <video
-              src={video}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-48 object-cover"
-            />
-          ) : image ? (
-            <ProjectImage src={image} alt={title} />
+      {media && (
+        <div className="relative shrink-0">
+          {hasMainLink ? (
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              {media}
+            </Link>
           ) : (
-            <div className="w-full h-48 bg-muted" />
+            <div className="block">{media}</div>
           )}
-        </Link>
-        {links && links.length > 0 && (
-          <div className="absolute top-2 right-2 flex flex-wrap gap-2">
-            {links.map((link, idx) => (
-              <Link
-                href={link.href}
-                key={idx}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Badge
-                  className="flex items-center gap-1.5 text-xs bg-black text-white hover:bg-black/90"
-                  variant="default"
+          {links && links.length > 0 && (
+            <div className="absolute top-2 right-2 flex flex-wrap gap-2 justify-end">
+              {links.map((link, idx) => (
+                <Link
+                  href={link.url}
+                  key={`${link.label}-${idx}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {link.icon}
-                  {link.type}
-                </Badge>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
+                  <Badge
+                    className="text-xs bg-black text-white hover:bg-black/90"
+                    variant="default"
+                  >
+                    {link.label}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       <div className="p-6 flex flex-col gap-3 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-col gap-1">
             <h3 className="font-semibold">{title}</h3>
-            <time className="text-xs text-muted-foreground">{dates}</time>
+            {dates && <time className="text-xs text-muted-foreground">{dates}</time>}
           </div>
-          <Link
-            href={href || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-            aria-label={`Open ${title}`}
-          >
-            <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </Link>
+          {hasMainLink && (
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              aria-label={`Open ${title}`}
+            >
+              <ArrowUpRight className="h-4 w-4" aria-hidden />
+            </Link>
+          )}
         </div>
-        <div className="text-xs flex-1 prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-          <Markdown>{description}</Markdown>
-        </div>
+        {description && (
+          <div className="text-xs flex-1 prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+            <Markdown>{description}</Markdown>
+          </div>
+        )}
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-auto">
             {tags.map((tag) => (

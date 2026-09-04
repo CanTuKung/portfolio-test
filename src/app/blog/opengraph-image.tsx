@@ -1,6 +1,6 @@
  
 import { ImageResponse } from "next/og";
-import { DATA } from "@/data/resume";
+import { profile } from "@/data/profile";
 
 export const runtime = "edge";
 
@@ -110,8 +110,8 @@ export default async function Image() {
         const fontData = await getFontData();
         const title = "News";
         const description = "Short updates on research progress, publications, and activities.";
-        const imageUrl = DATA.avatarUrl
-            ? new URL(DATA.avatarUrl, DATA.url).toString()
+        const imageUrl = profile.profileImage
+            ? new URL(profile.profileImage, profile.siteUrl).toString()
             : undefined;
 
         return new ImageResponse(

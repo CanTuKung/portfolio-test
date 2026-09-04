@@ -1,6 +1,7 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import FullPageHeader from "@/components/full-page-header";
 import WorkSection from "@/components/section/work-section";
+import { sortedNews } from "@/data/content";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -9,7 +10,7 @@ export default function NewsPage() {
     <main className="min-h-dvh flex flex-col gap-12">
       <FullPageHeader
         title="News"
-        description="Chronological news placeholders. Replace with your full update history later."
+        description="Chronological news from the centralized dataset (newest first)."
       />
 
       <section>
@@ -19,7 +20,7 @@ export default function NewsPage() {
           </BlurFade>
 
           <BlurFade delay={BLUR_FADE_DELAY * 6}>
-            <WorkSection />
+            <WorkSection items={sortedNews} />
           </BlurFade>
         </div>
       </section>

@@ -2,21 +2,61 @@
 
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
-import CardsShowcaseSection from "@/components/section/cards-showcase-section";
+import CardsShowcaseSection, {
+  type ShowcaseItem,
+} from "@/components/section/cards-showcase-section";
 import ContactSection from "@/components/section/contact-section";
 import WorkSection from "@/components/section/work-section";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DATA } from "@/data/resume";
+import {
+  education,
+  featuredProjects,
+  featuredPublications,
+  profile,
+  recentNews,
+} from "@/data/content";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
 const BLUR_FADE_DELAY = 0.04;
 
+const publicationItems: ShowcaseItem[] = featuredPublications.map((publication) => {
+  const links = [
+    publication.doi ? { label: "DOI", url: publication.doi } : null,
+    publication.pdf ? { label: "PDF", url: publication.pdf } : null,
+    publication.link ? { label: "Link", url: publication.link } : null,
+  ].filter((value): value is NonNullable<typeof value> => Boolean(value));
+
+  const descriptionParts = [
+    `${publication.authors} · ${publication.venue}`,
+    publication.description,
+  ].filter(Boolean);
+
+  return {
+    title: publication.title,
+    year: publication.year,
+    description: descriptionParts.join("\n\n"),
+    image: publication.image,
+    tags: publication.tags,
+    href: publication.doi ?? publication.pdf ?? publication.link,
+    links,
+  };
+});
+
+const projectItems: ShowcaseItem[] = featuredProjects.map((project) => ({
+  title: project.title,
+  year: project.year,
+  description: project.description,
+  image: project.image,
+  tags: project.tools,
+  href: project.links?.[0]?.url,
+  links: project.links,
+}));
+
 export default function Page() {
   return (
     <main className="min-h-dvh flex flex-col gap-14 relative">
-      {/* HOME */}
       <section id="hero">
         <div className="mx-auto w-full max-w-2xl space-y-8">
           <div className="gap-2 gap-y-6 flex flex-col md:flex-row justify-between">
@@ -25,20 +65,20 @@ export default function Page() {
                 delay={BLUR_FADE_DELAY}
                 className="text-3xl font-semibold tracking-tighter sm:text-4xl lg:text-5xl"
                 yOffset={8}
-                text={DATA.name}
+                text={profile.name}
               />
 
               <BlurFadeText
                 className="text-muted-foreground max-w-[600px] md:text-lg lg:text-xl"
                 delay={BLUR_FADE_DELAY}
-                text={DATA.description}
+                text={profile.shortIntroduction}
               />
             </div>
 
             <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
               <Avatar className="size-24 md:size-32 border rounded-full shadow-lg ring-4 ring-muted">
-                <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-                <AvatarFallback>{DATA.initials}</AvatarFallback>
+                <AvatarImage alt={profile.name} src={profile.profileImage} />
+                <AvatarFallback>{profile.initials}</AvatarFallback>
               </Avatar>
             </BlurFade>
           </div>
@@ -53,7 +93,7 @@ export default function Page() {
 
           <BlurFade delay={BLUR_FADE_DELAY * 4}>
             <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-              <Markdown>{DATA.summary}</Markdown>
+              <Markdown>{profile.about}</Markdown>
             </div>
           </BlurFade>
         </div>
@@ -66,22 +106,14 @@ export default function Page() {
           </BlurFade>
 
           <div className="flex flex-col gap-8">
-            {DATA.education.map((education, index) => (
-              <BlurFade
-                key={education.school}
-                delay={BLUR_FADE_DELAY * 6 + index * 0.05}
-              >
-                <Link
-                  href={education.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-x-3 justify-between group"
-                >
+            {education.map((item, index) => {
+              const content = (
+                <>
                   <div className="flex items-center gap-x-3 flex-1 min-w-0">
-                    {education.logoUrl ? (
+                    {item.logo ? (
                       <img
-                        src={education.logoUrl}
-                        alt={education.school}
+                        src={item.logo}
+                        alt={item.institution}
                         className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-contain flex-none"
                       />
                     ) : (
@@ -90,39 +122,58 @@ export default function Page() {
 
                     <div className="flex-1 min-w-0 flex flex-col gap-0.5">
                       <div className="font-semibold leading-none flex items-center gap-2">
-                        {education.school}
-                        <ArrowUpRight
-                          className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
-                          aria-hidden
-                        />
+                        {item.institution}
+                        {item.url && (
+                          <ArrowUpRight
+                            className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
+                            aria-hidden
+                          />
+                        )}
                       </div>
 
                       <div className="font-sans text-sm text-muted-foreground">
-                        {education.degree}
+                        {[item.degree, item.department].filter(Boolean).join(" · ")}
                       </div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none">
-                    <span>
-                      {education.start} - {education.end}
-                    </span>
+                    <span>{item.period}</span>
                   </div>
-                </Link>
-              </BlurFade>
-            ))}
+                </>
+              );
+
+              return (
+                <BlurFade
+                  key={`${item.institution}-${item.period}`}
+                  delay={BLUR_FADE_DELAY * 6 + index * 0.05}
+                >
+                  {item.url ? (
+                    <Link
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-x-3 justify-between group"
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    <div className="flex items-center gap-x-3 justify-between">{content}</div>
+                  )}
+                </BlurFade>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* PUBLICATIONS PREVIEW */}
       <section id="publications">
         <BlurFade delay={BLUR_FADE_DELAY * 9}>
           <CardsShowcaseSection
             badgeLabel="Publications"
             title="Selected Publications"
-            description="A short list of representative publications. Full details will be added later."
-            items={DATA.publications}
+            description="Featured publication entries from the full publications dataset."
+            items={publicationItems}
             maxItems={2}
             viewAllHref="/publications"
             viewAllLabel="View All Publications"
@@ -131,14 +182,13 @@ export default function Page() {
         </BlurFade>
       </section>
 
-      {/* PROJECTS PREVIEW */}
       <section id="projects">
         <BlurFade delay={BLUR_FADE_DELAY * 11}>
           <CardsShowcaseSection
             badgeLabel="Projects"
             title="Selected Projects"
-            description="Selected project highlights. Expand to the full projects page for the complete list."
-            items={DATA.projects}
+            description="Featured project entries from the full projects dataset."
+            items={projectItems}
             maxItems={2}
             viewAllHref="/projects"
             viewAllLabel="View All Projects"
@@ -147,7 +197,6 @@ export default function Page() {
         </BlurFade>
       </section>
 
-      {/* NEWS PREVIEW */}
       <section id="news">
         <div className="flex min-h-0 flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 13}>
@@ -164,12 +213,11 @@ export default function Page() {
           </BlurFade>
 
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <WorkSection limit={3} />
+            <WorkSection items={recentNews} />
           </BlurFade>
         </div>
       </section>
 
-      {/* CONTACT */}
       <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
           <ContactSection />
