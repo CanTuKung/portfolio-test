@@ -213,7 +213,7 @@ export default function Page() {
           </BlurFade>
 
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <WorkSection items={recentNews} />
+            <WorkSection items={recentNews} layout="homepage" />
           </BlurFade>
         </div>
       </section>

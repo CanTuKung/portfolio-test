@@ -20,7 +20,7 @@ export default function NewsPage() {
           </BlurFade>
 
           <BlurFade delay={BLUR_FADE_DELAY * 6}>
-            <WorkSection items={sortedNews} />
+            <WorkSection items={sortedNews} layout="archive" />
           </BlurFade>
         </div>
       </section>
