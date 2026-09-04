@@ -117,7 +117,7 @@ export function ProjectCard({
             <h3 className="font-semibold">{title}</h3>
             {dates && <time className="text-xs text-muted-foreground">{dates}</time>}
           </div>
-          {hasMainLink && (
+          {href && (
             <Link
               href={href}
               target="_blank"
